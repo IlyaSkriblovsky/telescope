@@ -7,6 +7,11 @@
 #include "XIdleTask.h"
 
 
+#ifdef MAEMO4
+    #define dbus_watch_get_unix_fd    dbus_watch_get_fd
+#endif
+
+
 XEventLoop* XEventLoop::_instance = 0;
 
 
