@@ -94,6 +94,8 @@ void Resources::reloadWallpaper()
     printf("Loading background from '%s'\n", Settings::instance()->backgroundFilename());
     printf("Background mode: %d\n", Settings::instance()->backgroundMode());
 
+    imlib_context_set_display(_dpy);
+
     int bgXpos = 0;
     int bgYpos = 0;
     Imlib_Image background = imlib_load_image(Settings::instance()->backgroundFilename());

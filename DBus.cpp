@@ -18,12 +18,19 @@
 DBus * DBus::_instance = 0;
 
 
+#ifdef LAUNCHER
 DBus::DBus(XEventLoop *eventLoop, TeleWindow *teleWindow, LauncherWindow *launcherWindow)
+#else
+DBus::DBus(XEventLoop *eventLoop, TeleWindow *teleWindow)
+#endif
 {
     _instance = this;
 
     _teleWindow = teleWindow;
-    _launcherWindow = launcherWindow;
+
+    #ifdef LAUNCHER
+        _launcherWindow = launcherWindow;
+    #endif
 
 
     DBusError error;
@@ -59,10 +66,12 @@ DBus::DBus(XEventLoop *eventLoop, TeleWindow *teleWindow, LauncherWindow *launch
         &_telescopeVTable, this);
 
 
-    _launcherVTable.unregister_function = (DBusObjectPathUnregisterFunction)launcher_unregister;
-    _launcherVTable.message_function = (DBusObjectPathMessageFunction)launcher_message;
-    dbus_connection_register_object_path(_conn, "/Launcher",
-        &_launcherVTable, this);
+    #ifdef LAUNCHER
+        _launcherVTable.unregister_function = (DBusObjectPathUnregisterFunction)launcher_unregister;
+        _launcherVTable.message_function = (DBusObjectPathMessageFunction)launcher_message;
+        dbus_connection_register_object_path(_conn, "/Launcher",
+            &_launcherVTable, this);
+    #endif
 
 
 
@@ -127,11 +136,13 @@ DBusHandlerResult DBus::telescope_message(
         self->_teleWindow->hide();
     }
 
-    XFlush(self->_launcherWindow->display());
+    XFlush(self->_teleWindow->display());
 
     return DBUS_HANDLER_RESULT_HANDLED;
 }
 
+
+#ifdef LAUNCHER
 
 void DBus::launcher_unregister(DBusConnection *conn, DBus *self)
 {
@@ -164,6 +175,8 @@ DBusHandlerResult DBus::launcher_message(
 
     return DBUS_HANDLER_RESULT_HANDLED;
 }
+
+#endif
 
 
 #endif

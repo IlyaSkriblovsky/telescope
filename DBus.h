@@ -22,7 +22,10 @@
 
 class XEventLoop;
 class TeleWindow;
-class LauncherWindow;
+
+#ifdef LAUNCHER
+    class LauncherWindow;
+#endif
 
 class DBus: public XIdleTask
 {
@@ -39,12 +42,10 @@ class DBus: public XIdleTask
 
         XEventLoop *_eventLoop;
         TeleWindow *_teleWindow;
-        LauncherWindow *_launcherWindow;
 
         DBusConnection *_conn;
 
         DBusObjectPathVTable _telescopeVTable;
-        DBusObjectPathVTable _launcherVTable;
 
         static void telescope_unregister(
             DBusConnection *conn,
@@ -56,15 +57,21 @@ class DBus: public XIdleTask
             DBus *self
         );
 
-        static void launcher_unregister(
-            DBusConnection *conn,
-            DBus *self
-        );
-        static DBusHandlerResult launcher_message(
-            DBusConnection *conn,
-            DBusMessage *msg,
-            DBus *self
-        );
+        #ifdef LAUNCHER
+            LauncherWindow *_launcherWindow;
+            DBusObjectPathVTable _launcherVTable;
+
+            static void launcher_unregister(
+                DBusConnection *conn,
+                DBus *self
+            );
+            static DBusHandlerResult launcher_message(
+                DBusConnection *conn,
+                DBusMessage *msg,
+                DBus *self
+            );
+        #endif
+
 
 
         static void sendDBusMessageToWindow(Display *dpy, Window window, DBusMessageType msg);
@@ -76,7 +83,12 @@ class DBus: public XIdleTask
         void onIdle();
 
     public:
-        DBus(XEventLoop *eventLoop, TeleWindow *teleWindow, LauncherWindow *launcherWindow);
+        #ifdef LAUNCHER
+            DBus(XEventLoop *eventLoop, TeleWindow *teleWindow, LauncherWindow *launcherWindow);
+        #else
+            DBus(XEventLoop *eventLoop, TeleWindow *teleWindow);
+        #endif
+
         virtual ~DBus();
 
         static DBus * instance() { return _instance; }

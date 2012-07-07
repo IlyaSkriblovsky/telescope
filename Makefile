@@ -12,6 +12,8 @@ all: telescope
 #DEFINES = -DKDE -DDBUS
 DEFINES = -DMAEMO4 -DDBUS
 
+LAUNCHER = 1
+
 SOURCES = TeleWindow.cpp    \
           Main.cpp          \
           XTools.cpp        \
@@ -21,13 +23,31 @@ SOURCES = TeleWindow.cpp    \
           Mappings.cpp      \
           Resources.cpp     \
           DBus.cpp          \
-          MenuReader.cpp    \
-          LauncherWindow.cpp\
-          SectionList.cpp   \
-          Section.cpp       \
-          Application.cpp   \
           XEventLoop.cpp    \
           Image.cpp
+
+
+ifeq ($(LAUNCHER),1)
+    DEFINES += -DLAUNCHER
+
+    SOURCES += \
+        MenuReader.cpp       \
+        LauncherWindow.cpp   \
+        SectionList.cpp      \
+        Section.cpp          \
+        Application.cpp
+
+    SHAREFILES += \
+         text-background.png        \
+         indicator.png              \
+         navigation.png             \
+         transparent.png            \
+         panel-icons/panel.png      \
+         panel-icons/panel-focus-left.png   \
+         panel-icons/panel-focus-right.png  \
+         panel-icons/panel-focus-middle.png \
+         category-icons
+endif
 
 
 DEPS = x11 xcomposite xdamage xrender imlib2 xft dbus-1 glib-2.0
@@ -39,16 +59,7 @@ SHAREFILES = header-left.png    \
              header-right-selected.png  \
              header-middle-selected.png \
              broken-pattern.png         \
-             install-notice.txt         \
-             text-background.png        \
-             indicator.png              \
-             navigation.png             \
-             transparent.png            \
-             panel-icons/panel.png      \
-             panel-icons/panel-focus-left.png   \
-             panel-icons/panel-focus-right.png  \
-             panel-icons/panel-focus-middle.png \
-             category-icons
+             install-notice.txt
 
 CONFFILES = telescope.conf telescope.keys
 

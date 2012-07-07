@@ -26,7 +26,9 @@
 
 #include "XEventLoop.h"
 
-#include "LauncherWindow.h"
+#ifdef LAUNCHER
+    #include "LauncherWindow.h"
+#endif
 
 
 TeleWindow::TeleWindow(Display *dpy)
@@ -208,8 +210,8 @@ bool TeleWindow::show()
 #endif
 
 
-//    if (_activeThumbnail)
-//        animate(_activeThumbnail, true);
+
+#ifdef LAUNCHER
 
     if (LauncherWindow::instance() && LauncherWindow::instance()->shown())
     {
@@ -217,6 +219,8 @@ bool TeleWindow::show()
         XFlush(_dpy);
         LauncherWindow::instance()->hide();
     }
+
+#endif
 
 
     return _shown;
@@ -583,9 +587,11 @@ void TeleWindow::onHotKeyPress()
 
     if (! _shown)
     {
-        if (! show())
-            if (! Settings::instance()->disableLauncher())
-                LauncherWindow::instance()->show();
+        #ifdef LAUNCHER
+            if (! show())
+                if (! Settings::instance()->disableLauncher())
+                    LauncherWindow::instance()->show();
+        #endif
     }
     else
     {
@@ -593,11 +599,13 @@ void TeleWindow::onHotKeyPress()
             _mappings.handleEvent(this, Mapping::Press, _hotKeyCode);
         else
         {
-            LauncherWindow::instance()->show();
-            XTools::switchToWindow(LauncherWindow::instance()->window());
-            LauncherWindow::instance()->paint();
-            XFlush(_dpy);
-            hide();
+            #ifdef LAUNCHER
+                LauncherWindow::instance()->show();
+                XTools::switchToWindow(LauncherWindow::instance()->window());
+                LauncherWindow::instance()->paint();
+                XFlush(_dpy);
+                hide();
+            #endif
         }
     }
 }

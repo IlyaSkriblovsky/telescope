@@ -15,17 +15,19 @@
 #include <X11/Xlib.h>
 
 #include "TeleWindow.h"
-#include "LauncherWindow.h"
 #include "XTools.h"
 #include "Settings.h"
 #include "Resources.h"
 #include "DBus.h"
 
-#include "LauncherWindow.h"
-#include "SectionList.h"
-#include "MenuReader.h"
-
 #include "XEventLoop.h"
+
+
+#ifdef LAUNCHER
+    #include "LauncherWindow.h"
+    #include "SectionList.h"
+    #include "MenuReader.h"
+#endif
 
 
 
@@ -94,25 +96,24 @@ int main(int argc, char *argv[])
     Resources * resources = new Resources(dpy);
 
 
-    MenuReader *menuReader = new MenuReader(dpy);
-
-    // read the hildon application menu
-    //SectionList * list = MenuReader::getInstance()->processMenu();
-//    if (list == NULL)
-//    {
-//      fprintf(stderr, "Cannot read the menu configuration");
-//      return 1;
-//    }
-
     XEventLoop *eventLoop = new XEventLoop(dpy);
 
 
     TeleWindow *teleWindow = new TeleWindow(dpy);
-    LauncherWindow *launcherWindow = 0;
-    if (! settings->disableLauncher())
-        launcherWindow = new LauncherWindow(dpy/*, list*/);
 
-    DBus *dbus = new DBus(eventLoop, teleWindow, launcherWindow);
+    #ifdef LAUNCHER
+        MenuReader *menuReader = new MenuReader(dpy);
+        LauncherWindow *launcherWindow = 0;
+        if (! settings->disableLauncher())
+            launcherWindow = new LauncherWindow(dpy/*, list*/);
+    #endif
+
+    #ifdef LAUNCHER
+        DBus *dbus = new DBus(eventLoop, teleWindow, launcherWindow);
+    #else
+        DBus *dbus = new DBus(eventLoop, teleWindow);
+    #endif
+
 
     eventLoop->eventLoop();
 
@@ -121,10 +122,14 @@ int main(int argc, char *argv[])
     delete dbus;
 
     delete teleWindow;
-    delete launcherWindow;
+
+    #ifdef LAUNCHER
+        delete launcherWindow;
+        delete menuReader;
+    #endif
+
     delete resources;
     delete settings;
-    delete menuReader;
 
     XCloseDisplay(dpy);
 }

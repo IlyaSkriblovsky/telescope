@@ -69,7 +69,9 @@ Settings::Settings()
     _hotKey = strdup("F5");
 
 
-    _disableLauncher = false;
+    #ifdef LAUNCHER
+        _disableLauncher = false;
+    #endif
 
     _categoryIconsDir = strdup("/usr/share/telescope/category-icons/");
 
@@ -332,31 +334,40 @@ void Settings::parseOpt(const char *key, const char *value)
         free(_brokenPatternFilename);
         _brokenPatternFilename = strdup(value);
     }
-    else if (strcmp(key, "launcher.text.background") == 0)
-    {
-        free(_textBackgroundFilename);
-        _textBackgroundFilename = strdup(value);
-    }
-    else if (strcmp(key, "launcher.panel.background.filename") == 0)
-    {
-        free(_panelBackgroundFilename);
-        _panelBackgroundFilename = strdup(value);
-    }
-    else if (strcmp(key, "launcher.panel.focus.left.filename") == 0)
-    {
-        free(_panelFocusLeftFilename);
-        _panelFocusLeftFilename = strdup(value);
-    }
-    else if (strcmp(key, "launcher.panel.focus.right.filename") == 0)
-    {
-        free(_panelFocusRightFilename);
-        _panelFocusRightFilename = strdup(value);
-    }
-    else if (strcmp(key, "launcher.panel.focus.middle.filename") == 0)
-    {
-        free(_panelFocusMiddleFilename);
-        _panelFocusMiddleFilename = strdup(value);
-    }
+    #ifdef LAUNCHER
+        else if (strcmp(key, "launcher.text.background") == 0)
+        {
+            free(_textBackgroundFilename);
+            _textBackgroundFilename = strdup(value);
+        }
+        else if (strcmp(key, "launcher.panel.background.filename") == 0)
+        {
+            free(_panelBackgroundFilename);
+            _panelBackgroundFilename = strdup(value);
+        }
+        else if (strcmp(key, "launcher.panel.focus.left.filename") == 0)
+        {
+            free(_panelFocusLeftFilename);
+            _panelFocusLeftFilename = strdup(value);
+        }
+        else if (strcmp(key, "launcher.panel.focus.right.filename") == 0)
+        {
+            free(_panelFocusRightFilename);
+            _panelFocusRightFilename = strdup(value);
+        }
+        else if (strcmp(key, "launcher.panel.focus.middle.filename") == 0)
+        {
+            free(_panelFocusMiddleFilename);
+            _panelFocusMiddleFilename = strdup(value);
+        }
+        else if (strcmp(key, "launcher.disable") == 0)
+            _disableLauncher = parseBool(value);
+        else if (strcmp(key, "launcher.categories.iconsdir") == 0)
+        {
+            free(_categoryIconsDir);
+            _categoryIconsDir = strdup(value);
+        }
+    #endif
     else if (strcmp(key, "border.width") == 0)
         _borderWidth = atoi(value);
     else if (strcmp(key, "text.leftMargin") == 0)
@@ -381,13 +392,6 @@ void Settings::parseOpt(const char *key, const char *value)
     {
         free(_hotKey);
         _hotKey = strdup(value);
-    }
-    else if (strcmp(key, "launcher.disable") == 0)
-        _disableLauncher = parseBool(value);
-    else if (strcmp(key, "launcher.categories.iconsdir") == 0)
-    {
-        free(_categoryIconsDir);
-        _categoryIconsDir = strdup(value);
     }
 }
 

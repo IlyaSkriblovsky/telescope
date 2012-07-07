@@ -68,7 +68,9 @@ class Settings
         bool _showDesktopByIconify;
 
 
-        bool _disableLauncher;
+        #ifdef LAUNCHER
+            bool _disableLauncher;
+        #endif
 
 
         char *_categoryIconsDir;
@@ -133,7 +135,14 @@ class Settings
         const char *hotKey() { return _hotKey; }
 
 
-        bool disableLauncher() { return _disableLauncher; }
+        bool disableLauncher()
+        {
+            #ifdef LAUNCHER
+                return _disableLauncher;
+            #else
+                return true;
+            #endif
+        }
 
 
         const char *categoryIconsDir() { return _categoryIconsDir; }
