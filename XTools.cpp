@@ -343,7 +343,7 @@ bool XTools::checkIfWindowMinimized(Window window)
     if (status != Success)
         return false;
 
-    bool minimized = *property == IconicState;
+    bool minimized = property ? (*property == IconicState) : false;
 
     XFree(property);
 

@@ -114,14 +114,15 @@ TeleWindow::TeleWindow(Display *dpy)
 
 
 
-    XSelectInput(_dpy, _rootWindow, StructureNotifyMask | PropertyChangeMask);
+    XSelectInput(_dpy, _rootWindow, StructureNotifyMask | PropertyChangeMask | KeyPressMask | KeyReleaseMask);
 
 
     // Hotkey keycode
     KeySym keysym = XStringToKeysym(Settings::instance()->hotKey());
     _hotKeyCode = XKeysymToKeycode(_dpy, keysym);
     _hotKeyPressed = false;
-    XGrabKey(_dpy, _hotKeyCode, 0, _rootWindow, False, GrabModeAsync, GrabModeAsync);
+    XGrabKey(_dpy, _hotKeyCode,        0, _rootWindow, False, GrabModeAsync, GrabModeAsync);
+    XGrabKey(_dpy, _hotKeyCode, Mod2Mask, _rootWindow, False, GrabModeAsync, GrabModeAsync);
 
     _activeThumbnail = 0;
 
@@ -459,8 +460,11 @@ void TeleWindow::onRootEvent(XEvent *event)
         else
             _mappings.handleEvent(this, Mapping::GlobalPress, event->xkey.keycode);
     }
-    else if (event->type == KeyRelease && event->xkey.keycode == _hotKeyCode)
-        onHotKeyRelease();
+    else if (event->type == KeyRelease)
+    {
+        if (event->xkey.keycode == _hotKeyCode)
+            onHotKeyRelease();
+    }
 //    else if (event->type == MapNotify)
 //    {
 //    }
@@ -587,11 +591,13 @@ void TeleWindow::onHotKeyPress()
 
     if (! _shown)
     {
-        #ifdef LAUNCHER
-            if (! show())
+        if (! show())
+        {
+            #ifdef LAUNCHER
                 if (! Settings::instance()->disableLauncher())
                     LauncherWindow::instance()->show();
-        #endif
+            #endif
+        }
     }
     else
     {

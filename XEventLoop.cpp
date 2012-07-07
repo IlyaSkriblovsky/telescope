@@ -43,6 +43,8 @@ void XEventLoop::addIdleTask(XIdleTask *idleTask)
 
 void XEventLoop::eventLoop()
 {
+    XFlush(_dpy);
+
     int xSocket = XConnectionNumber(_dpy);
     fd_set fdset;
 
