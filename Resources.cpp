@@ -57,6 +57,8 @@ Resources::Resources(Display *dpy): _dpy(dpy)
     XRenderParseColor(_dpy, Settings::instance()->borderColor(), &_borderColor);
     XRenderParseColor(_dpy, Settings::instance()->borderActiveColor(), &_borderActiveColor);
 
+    XRenderParseColor(_dpy, Settings::instance()->backgroundColor(), &_backgroundColor);
+
     reloadWallpaper();
 }
 
@@ -103,16 +105,18 @@ void Resources::reloadWallpaper()
     {
         printf("Cannot load background\n");
         printf("rgb = (%d, %d, %d)\n",
-            Settings::instance()->backgroundR(),
-            Settings::instance()->backgroundG(),
-            Settings::instance()->backgroundB());
+            _backgroundColor.red   / 256,
+            _backgroundColor.green / 256,
+            _backgroundColor.blue  / 256
+        );
         background = imlib_create_image(width, height);
         imlib_context_set_image(background);
         imlib_context_set_color(
-            Settings::instance()->backgroundR(),
-            Settings::instance()->backgroundG(),
-            Settings::instance()->backgroundB(),
-            255);
+            _backgroundColor.red   / 256,
+            _backgroundColor.green / 256,
+            _backgroundColor.blue  / 256,
+            255
+        );
         imlib_image_fill_rectangle(0, 0, width, height);
     }
     else

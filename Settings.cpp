@@ -31,7 +31,7 @@ Settings::Settings()
 
     _backgroundFilename = 0; // Will be set later if not in config file
     _backgroundMode = Stretched;
-    _backgroundR = _backgroundG = _backgroundB = 0;
+    _backgroundColor = strdup("#202020");
 
     _headerLeftFilename = strdup("/usr/share/telescope/header-left.png");
     _headerRightFilename = strdup("/usr/share/telescope/header-right.png");
@@ -103,6 +103,7 @@ Settings::Settings()
             char line[1024];
             static const char *prefix1 = "BackgroundImage=";
             static const char *prefix3 = "CachedAs=";
+            int r = 0, g = 0, b = 0;
             while (fgets(line, sizeof(line), homeBgFile) != 0)
             {
                 if (strstr(line, prefix1) == line)
@@ -138,12 +139,17 @@ Settings::Settings()
                         _backgroundMode = Cropped;
                 }
                 else if (strncmp(line, "Red=", 4) == 0)
-                    _backgroundR = atoi(&line[4]) / 256;
+                    r = atoi(&line[4]) / 256;
                 else if (strncmp(line, "Green=", 6) == 0)
-                    _backgroundG = atoi(&line[6]) / 256;
+                    g = atoi(&line[6]) / 256;
                 else if (strncmp(line, "Blue=", 5) == 0)
-                    _backgroundB = atoi(&line[5]) / 256;
+                    b = atoi(&line[5]) / 256;
             }
+
+            free(_backgroundColor);
+            _backgroundColor = (char*)malloc(8);
+            snprintf(_backgroundColor, 8, "#%x%x%x", r, g, b);
+printf("BACKGROUND COLOR: %s\n", _backgroundColor);
 
             fclose(homeBgFile);
         }
@@ -156,6 +162,7 @@ Settings::Settings()
 Settings::~Settings()
 {
     free(_backgroundFilename);
+    free(_backgroundColor);
     free(_headerLeftFilename);
     free(_headerRightFilename);
     free(_headerMiddleFilename);
@@ -288,6 +295,13 @@ void Settings::parseOpt(const char *key, const char *value)
             _backgroundMode = Scaled;
         else if (strcmp(value, "cropped") == 0)
             _backgroundMode = Cropped;
+    }
+    else if (strcmp(key, "background.color") == 0)
+    {
+        free(_backgroundColor);
+        _backgroundColor = strdup(value);
+
+        printf("Background color: %s\n", _backgroundColor);
     }
     else if (strcmp(key, "header.left.filename") == 0)
     {

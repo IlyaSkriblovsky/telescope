@@ -41,6 +41,8 @@ class Resources
         Image* _textBackground;
 
 
+        XRenderColor _backgroundColor;
+
         Image* _wallpaper;
 
     public:

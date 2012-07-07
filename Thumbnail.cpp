@@ -51,7 +51,7 @@ Thumbnail::Thumbnail(TeleWindow *teleWindow, Window clientWindow)
     XWindowAttributes attrs;
     XGetWindowAttributes(_dpy, _clientWindow, &attrs);
 
-#ifdef KDE
+#ifdef DESKTOP
     Window root;
     Window parent;
     Window *children;

@@ -29,7 +29,7 @@ class Settings
         bool _scrollingEnabled;
         char *_backgroundFilename;
         BackgroundMode _backgroundMode;
-        int _backgroundR, _backgroundG, _backgroundB;
+        char *_backgroundColor;
 
         char *_headerLeftFilename;
         char *_headerRightFilename;
@@ -94,9 +94,7 @@ class Settings
 
         const char* backgroundFilename() { return _backgroundFilename; }
         BackgroundMode backgroundMode() { return _backgroundMode; }
-        int backgroundR() { return _backgroundR; }
-        int backgroundG() { return _backgroundG; }
-        int backgroundB() { return _backgroundB; }
+        char* backgroundColor() { return _backgroundColor; }
 
         const char* headerLeftFilename() { return _headerLeftFilename; }
         const char* headerRightFilename() { return _headerRightFilename; }
