@@ -81,6 +81,9 @@ Mapping* Mapping::parseMappingLine(Display *dpy, const char *line, const char **
 //    printf("action:\t%s\n", action);
 //    printf("\n");
 
+    KeySym keySym = XStringToKeysym(keysym);
+    KeyCode keyCode = XKeysymToKeycode(dpy, keySym);
+
 
     Mapping *result = 0;
 
@@ -94,9 +97,6 @@ Mapping* Mapping::parseMappingLine(Display *dpy, const char *line, const char **
         *error = "Invalid event";
         goto finish;
     }
-
-    KeySym keySym = XStringToKeysym(keysym);
-    KeyCode keyCode = XKeysymToKeycode(dpy, keySym);
 
     if (keyCode == 0)
     {

@@ -80,7 +80,7 @@ void XEventLoop::eventLoop()
         for (LinkedList<DBusWatch*>::Iter i = _dbusWatches.head(); i; ++i)
             if (dbus_watch_get_enabled(*i))
             {
-                int dbusSocket = dbus_watch_get_fd(*i);
+                int dbusSocket = dbus_watch_get_unix_fd(*i);
                 FD_SET(dbusSocket, &fdset);
                 if (dbusSocket > maxSocket)
                     maxSocket = dbusSocket;
@@ -89,7 +89,7 @@ void XEventLoop::eventLoop()
         if (select(maxSocket+1, &fdset, 0, 0, nearestTimeout ? &remaining : 0))
         {
             for (LinkedList<DBusWatch*>::Iter i = _dbusWatches.head(); i; ++i)
-                if (FD_ISSET(dbus_watch_get_fd(*i), &fdset))
+                if (FD_ISSET(dbus_watch_get_unix_fd(*i), &fdset))
                     dbus_watch_handle(*i, DBUS_WATCH_READABLE | DBUS_WATCH_WRITABLE);
         }
         else

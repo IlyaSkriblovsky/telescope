@@ -9,7 +9,7 @@
 
 all: telescope
 
-#DEFINES = -DKDE
+#DEFINES = -DKDE -DDBUS
 DEFINES = -DMAEMO4 -DDBUS
 
 SOURCES = TeleWindow.cpp    \
@@ -59,7 +59,7 @@ CFLAGS += -Wall -Werror -O2 $(DEFINES) `pkg-config --cflags $(DEPS)` -pthread
 OBJS = $(SOURCES:%.cpp=%.o)
 
 telescope: $(OBJS)
-	g++ `pkg-config --libs $(DEPS)` -pthread $^ -o $@
+	g++ -pthread $^ -o $@ `pkg-config --libs $(DEPS)`
 
 .cpp.o:
 	g++ -c $(CFLAGS) $< -o $@

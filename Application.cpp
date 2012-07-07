@@ -330,7 +330,7 @@ void Application::createPicture()
         _xftFont = XftFontOpen(_dpy, DefaultScreen(_dpy),
             XFT_FAMILY, XftTypeString, "sans",
             XFT_PIXEL_SIZE, XftTypeInteger, 15,
-            0
+            NULL
         );
     }
 

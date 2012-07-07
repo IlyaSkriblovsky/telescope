@@ -131,7 +131,7 @@ LauncherWindow::LauncherWindow ( Display *dpy/*, SectionList *list */)
         XFT_FAMILY, XftTypeString, "sans",
         XFT_PIXEL_SIZE, XftTypeInteger, 23,
         XFT_WEIGHT, XftTypeInteger, XFT_WEIGHT_BOLD,
-        0
+        NULL
     );
 
 
@@ -705,7 +705,7 @@ void LauncherWindow::recreateBuffer()
 int checkpng(const struct dirent *ent)
 {
     static const char *png = ".png";
-    char *match = strstr(ent->d_name, png);
+    const char *match = strstr(ent->d_name, png);
     return match && (unsigned int)(match - ent->d_name) == strlen(ent->d_name) - strlen(png);
 }
 

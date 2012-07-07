@@ -269,7 +269,7 @@ void MenuReader::_getDesktopFiles()
     dp = opendir (DESKTOP_FILE_PATH);
     if (dp != NULL)
     {
-        while (ep = readdir (dp))
+        while ((ep = readdir (dp)))
         {
             // only insert .desktop file
             if (g_str_has_suffix(ep->d_name, ".desktop"))

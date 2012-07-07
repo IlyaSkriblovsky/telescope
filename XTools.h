@@ -96,7 +96,7 @@ class XTools
             Picture *picture
         );
 
-        static Atom XTools::windowType(Window window);
+        static Atom windowType(Window window);
 };
 
 #endif

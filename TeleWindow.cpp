@@ -98,16 +98,12 @@ TeleWindow::TeleWindow(Display *dpy)
     _xftFont = XftFontOpen(_dpy, scr,
         XFT_FAMILY, XftTypeString, "sans",
         XFT_PIXEL_SIZE, XftTypeInteger, Settings::instance()->fontSize(),
-        0);
+        NULL);
 
 
     // Double buffering pixmap
     _buffer = 0;
     recreateBuffer();
-
-
-    XRenderPictureAttributes pa;
-    pa.subwindow_mode = IncludeInferiors;
 
 
 
