@@ -148,8 +148,7 @@ Settings::Settings()
 
             free(_backgroundColor);
             _backgroundColor = (char*)malloc(8);
-            snprintf(_backgroundColor, 8, "#%x%x%x", r, g, b);
-printf("BACKGROUND COLOR: %s\n", _backgroundColor);
+            snprintf(_backgroundColor, 8, "#%02x%02x%02x", r, g, b);
 
             fclose(homeBgFile);
         }
