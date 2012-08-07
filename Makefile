@@ -52,14 +52,14 @@ endif
 
 DEPS = x11 xcomposite xdamage xrender imlib2 xft dbus-1 glib-2.0
 
-SHAREFILES = header-left.png    \
-             header-right.png   \
-             header-middle.png  \
-             header-left-selected.png   \
-             header-right-selected.png  \
-             header-middle-selected.png \
-             broken-pattern.png         \
-             install-notice.txt
+SHAREFILES += header-left.png    \
+              header-right.png   \
+              header-middle.png  \
+              header-left-selected.png   \
+              header-right-selected.png  \
+              header-middle-selected.png \
+              broken-pattern.png         \
+              install-notice.txt
 
 CONFFILES = telescope.conf telescope.keys
 
